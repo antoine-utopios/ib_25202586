@@ -1,0 +1,6 @@
+<div>
+  <button id="decrement" (click)="decrement(1)" [disabled]="counterValue() <= 0"
+    [class.btnDisabled]="counterValue() <= 0">&lt;&lt;</button>
+  <span id="current-value">{{ counterValue() }}</span>
+  <button id="increment" (click)="increment(1)">&gt;&gt;</button>
+</div>
