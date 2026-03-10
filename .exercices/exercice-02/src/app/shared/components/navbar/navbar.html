@@ -1,0 +1,38 @@
+<nav class="navbar" [class.scrolled]="isScrolled">
+  <div class="navbar__container">
+    <a routerLink="/" class="navbar__brand" (click)="closeMobileMenu()">
+      <span class="navbar__logo">♪</span>
+      <span class="navbar__name">MusicVault</span>
+    </a>
+
+    <ul class="navbar__links" [class.open]="isMobileMenuOpen">
+      <li>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+           (click)="closeMobileMenu()">Accueil</a>
+      </li>
+      <li>
+        <a routerLink="/album" routerLinkActive="active"
+           (click)="closeMobileMenu()">Albums</a>
+      </li>
+      <li>
+        <a routerLink="/about" routerLinkActive="active"
+           (click)="closeMobileMenu()">À propos</a>
+      </li>
+      <li>
+        <a routerLink="/contact" routerLinkActive="active"
+           (click)="closeMobileMenu()">Contact</a>
+      </li>
+      <li class="navbar__cta">
+        <a routerLink="/album/add" class="btn btn--primary btn--sm"
+           (click)="closeMobileMenu()">+ Ajouter</a>
+      </li>
+    </ul>
+
+    <button class="navbar__burger" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen"
+            aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</nav>

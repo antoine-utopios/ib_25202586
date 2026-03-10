@@ -1,0 +1,170 @@
+<div class="bowling-app">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">🎳</span>
+        <span class="logo-text">BOWLING</span>
+      </div>
+      <div class="score-badge">
+        <span class="score-label">SCORE TOTAL</span>
+        <span class="score-value">{{ bowling.totalScore() }}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Scoreboard -->
+  <section class="scoreboard-wrapper">
+    <div class="scoreboard-scroll">
+      <table class="scoreboard">
+        <thead>
+          <tr>
+            <th class="frame-header" *ngFor="let frame of bowling.frames(); let i = index; trackBy: trackByIndex">
+              <span class="frame-number">F{{ i + 1 }}</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Lancers -->
+          <tr class="rolls-row">
+            <td
+              *ngFor="let frame of bowling.frames(); let i = index; trackBy: trackByIndex"
+              class="frame-cell"
+              [class.active]="i === bowling.currentFrameIndex() && bowling.gameStatus() === 'playing'"
+              [class.complete]="frame.isComplete"
+              [class.is-strike]="frame.isStrike && !frame.isTenthFrame"
+            >
+              <div class="rolls-container" [class.tenth]="frame.isTenthFrame">
+                <!-- Frames 1-9 -->
+                <ng-container *ngIf="!frame.isTenthFrame">
+                  <div class="roll-box roll-first">
+                    <span *ngIf="frame.isStrike; else normalFirst" class="strike">X</span>
+                    <ng-template #normalFirst>
+                      <span>{{ getRollDisplay(frame, 0) }}</span>
+                    </ng-template>
+                  </div>
+                  <div class="roll-box roll-second">
+                    <span>{{ getRollDisplay(frame, 1) }}</span>
+                  </div>
+                </ng-container>
+
+                <!-- 10ème frame -->
+                <ng-container *ngIf="frame.isTenthFrame">
+                  <div class="roll-box roll-tenth"
+                    [class.strike-box]="frame.rolls[0]?.pins === 10">
+                    <span>{{ getRollDisplay(frame, 0) }}</span>
+                  </div>
+                  <div class="roll-box roll-tenth"
+                    [class.strike-box]="frame.rolls[1]?.isStrike">
+                    <span>{{ getRollDisplay(frame, 1) }}</span>
+                  </div>
+                  <div class="roll-box roll-tenth bonus-roll"
+                    [class.strike-box]="frame.rolls[2]?.isStrike">
+                    <span>{{ getRollDisplay(frame, 2) }}</span>
+                  </div>
+                </ng-container>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Scores cumulatifs -->
+          <tr class="scores-row">
+            <td
+              *ngFor="let frame of bowling.frames(); trackBy: trackByIndex"
+              class="score-cell"
+            >
+              <span class="cumulative-score">
+                {{ frame.cumulativeScore !== null ? frame.cumulativeScore : '' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Zone de jeu -->
+  <section class="game-zone" *ngIf="bowling.gameStatus() === 'playing'">
+    <div class="lane-info">
+      <div class="pins-info">
+        <span class="pins-label">Quilles debout</span>
+        <div class="pins-count">{{ bowling.pinsStanding() }}</div>
+      </div>
+      <div class="frame-info">
+        <span class="pins-label">Frame actuelle</span>
+        <div class="pins-count">{{ bowling.currentFrameIndex() + 1 }}</div>
+      </div>
+    </div>
+
+    <!-- Pins visualization -->
+    <div class="pins-visual">
+      <div class="pin-row row-4">
+        <div *ngFor="let p of [0,1,2,3]" class="pin" [class.standing]="p < bowling.pinsStanding()"></div>
+      </div>
+      <div class="pin-row row-3">
+        <div *ngFor="let p of [0,1,2]" class="pin" [class.standing]="p + 4 < bowling.pinsStanding() + 1"></div>
+      </div>
+      <div class="pin-row row-2">
+        <div *ngFor="let p of [0,1]" class="pin" [class.standing]="p + 7 < bowling.pinsStanding() + 2"></div>
+      </div>
+      <div class="pin-row row-1">
+        <div class="pin" [class.standing]="bowling.pinsStanding() === 10"></div>
+      </div>
+    </div>
+
+    <!-- Boutons de lancer -->
+    <div class="roll-controls">
+      <p class="controls-label">Sélectionnez le nombre de quilles à faire tomber :</p>
+      <div class="roll-buttons">
+        <button
+          *ngFor="let n of rollButtons()"
+          class="roll-btn"
+          [class.zero]="n === 0"
+          [class.strike]="n === 10 && bowling.currentRollIndex() === 0 && bowling.currentFrameIndex() !== 9"
+          (click)="roll(n)"
+        >
+          {{ n === 0 ? '–' : n }}
+          <span *ngIf="n === 10 && bowling.currentRollIndex() === 0 && bowling.currentFrameIndex() !== 9" class="btn-label">STRIKE</span>
+          <span *ngIf="n === bowling.pinsStanding() && bowling.currentRollIndex() === 1 && n !== 0" class="btn-label">SPARE</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Action rapide -->
+    <div class="quick-actions">
+      <button class="btn-random" (click)="rollRandom()">
+        🎲 Lancer aléatoire
+      </button>
+    </div>
+  </section>
+
+  <!-- Fin de partie -->
+  <section class="game-over" *ngIf="bowling.gameStatus() === 'finished'">
+    <div class="game-over-card">
+      <div class="trophy">🏆</div>
+      <h2 class="game-over-title">Partie terminée !</h2>
+      <div class="final-score">
+        <span class="final-label">Score final</span>
+        <span class="final-value">{{ bowling.totalScore() }}</span>
+        <span class="final-max">/ 300</span>
+      </div>
+      <div class="performance" [class.perfect]="bowling.totalScore() === 300">
+        <span *ngIf="bowling.totalScore() === 300">🎳 PERFECT GAME ! 🎳</span>
+        <span *ngIf="bowling.totalScore() >= 200 && bowling.totalScore() < 300">Excellent jeu !</span>
+        <span *ngIf="bowling.totalScore() >= 150 && bowling.totalScore() < 200">Très bon jeu !</span>
+        <span *ngIf="bowling.totalScore() >= 100 && bowling.totalScore() < 150">Bon jeu !</span>
+        <span *ngIf="bowling.totalScore() < 100">Continuez à vous entraîner !</span>
+      </div>
+      <button class="btn-reset" (click)="reset()">
+        🔄 Nouvelle partie
+      </button>
+    </div>
+  </section>
+
+  <!-- Reset en cours de partie -->
+  <div class="reset-bar" *ngIf="bowling.gameStatus() === 'playing'">
+    <button class="btn-reset-small" (click)="reset()">↺ Recommencer</button>
+  </div>
+
+</div>

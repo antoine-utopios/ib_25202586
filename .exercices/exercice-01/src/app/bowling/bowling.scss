@@ -1,0 +1,483 @@
+// ── Variables ─────────────────────────────────────────────────────────────
+$bg: #0d0f14;
+$surface: #161920;
+$surface-alt: #1e2230;
+$border: #2a2f42;
+$accent: #f5c842;
+$accent-dim: #c49d1f;
+$strike-color: #ff5e5e;
+$spare-color: #5ec4ff;
+$text: #e8ecf5;
+$text-muted: #6b7494;
+$radius: 10px;
+
+// ── Reset & Base ──────────────────────────────────────────────────────────
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.bowling-app {
+  min-height: 100vh;
+  background: $bg;
+  color: $text;
+  font-family: 'Courier New', 'Lucida Console', monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 3rem;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────
+.header {
+  width: 100%;
+  background: $surface;
+  border-bottom: 2px solid $border;
+  padding: 1rem 2rem;
+}
+
+.header-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.logo-icon { font-size: 1.8rem; }
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: $accent;
+}
+
+.score-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.score-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: $text-muted;
+  text-transform: uppercase;
+}
+
+.score-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: $accent;
+  line-height: 1;
+}
+
+// ── Scoreboard ────────────────────────────────────────────────────────────
+.scoreboard-wrapper {
+  width: 100%;
+  max-width: 980px;
+  margin: 2rem auto 0;
+  padding: 0 1rem;
+}
+
+.scoreboard-scroll {
+  overflow-x: auto;
+  border-radius: $radius;
+  border: 2px solid $border;
+}
+
+.scoreboard {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+  background: $surface;
+
+  thead tr {
+    background: $surface-alt;
+  }
+
+  th.frame-header {
+    padding: 0.4rem 0;
+    text-align: center;
+    border-right: 1px solid $border;
+    &:last-child { border-right: none; }
+  }
+
+  .frame-number {
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    color: $text-muted;
+    text-transform: uppercase;
+  }
+}
+
+// ── Frame cells ───────────────────────────────────────────────────────────
+.rolls-row td.frame-cell {
+  border-right: 1px solid $border;
+  border-bottom: 1px solid $border;
+  padding: 0;
+  transition: background 0.2s;
+
+  &:last-child { border-right: none; }
+
+  &.active {
+    background: rgba($accent, 0.06);
+    .rolls-container { border-bottom: 2px solid $accent; }
+  }
+
+  &.is-strike .rolls-container {
+    background: rgba($strike-color, 0.08);
+  }
+}
+
+.rolls-container {
+  display: flex;
+  justify-content: flex-end;
+  height: 44px;
+  position: relative;
+
+  &.tenth {
+    justify-content: space-evenly;
+  }
+}
+
+.roll-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+
+  &.roll-first {
+    width: 50%;
+    font-size: 0.85rem;
+    color: $text-muted;
+    border-right: 1px solid $border;
+  }
+
+  &.roll-second {
+    width: 50%;
+    font-size: 1rem;
+
+    span { color: $spare-color; }
+  }
+
+  &.roll-tenth {
+    flex: 1;
+    border-right: 1px solid $border;
+    font-size: 0.85rem;
+    &:last-child { border-right: none; }
+    &.strike-box span { color: $strike-color; }
+  }
+
+  .strike { color: $strike-color; font-size: 1.1rem; }
+}
+
+.bonus-roll {
+  background: rgba($accent, 0.05);
+}
+
+// ── Score row ─────────────────────────────────────────────────────────────
+.scores-row td.score-cell {
+  height: 36px;
+  text-align: center;
+  vertical-align: middle;
+  border-right: 1px solid $border;
+  &:last-child { border-right: none; }
+}
+
+.cumulative-score {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: $accent;
+}
+
+// ── Game zone ─────────────────────────────────────────────────────────────
+.game-zone {
+  width: 100%;
+  max-width: 680px;
+  margin: 2rem auto 0;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.lane-info {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.pins-info, .frame-info {
+  flex: 1;
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 0.8rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.pins-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: $text-muted;
+  text-transform: uppercase;
+}
+
+.pins-count {
+  font-size: 2rem;
+  font-weight: 700;
+  color: $accent;
+  line-height: 1;
+}
+
+// ── Pins visual ───────────────────────────────────────────────────────────
+.pins-visual {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 8px;
+  padding: 1.2rem;
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $radius;
+}
+
+.pin-row {
+  display: flex;
+  gap: 10px;
+}
+
+.pin {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: $border;
+  border: 2px solid darken($border, 5%);
+  transition: all 0.25s ease;
+
+  &.standing {
+    background: $accent;
+    border-color: $accent-dim;
+    box-shadow: 0 0 8px rgba($accent, 0.5);
+  }
+}
+
+// ── Roll controls ─────────────────────────────────────────────────────────
+.roll-controls {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 1.2rem;
+}
+
+.controls-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: $text-muted;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+.roll-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.roll-btn {
+  position: relative;
+  min-width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  border: 2px solid $border;
+  background: $surface-alt;
+  color: $text;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+
+  &:hover {
+    border-color: $accent;
+    color: $accent;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($accent, 0.2);
+  }
+
+  &:active { transform: translateY(0); }
+
+  &.zero {
+    color: $text-muted;
+    &:hover { border-color: $text-muted; color: $text-muted; box-shadow: none; }
+  }
+
+  &.strike {
+    border-color: $strike-color;
+    color: $strike-color;
+    background: rgba($strike-color, 0.08);
+    min-width: 64px;
+    height: 52px;
+    font-size: 1.2rem;
+
+    &:hover {
+      background: rgba($strike-color, 0.18);
+      box-shadow: 0 4px 16px rgba($strike-color, 0.35);
+    }
+  }
+
+  .btn-label {
+    font-size: 0.5rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: inherit;
+  }
+}
+
+// ── Quick actions ─────────────────────────────────────────────────────────
+.quick-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-random {
+  padding: 0.6rem 1.5rem;
+  background: transparent;
+  border: 2px solid $border;
+  border-radius: $radius;
+  color: $text-muted;
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    border-color: $text;
+    color: $text;
+    background: $surface-alt;
+  }
+}
+
+// ── Reset bar ─────────────────────────────────────────────────────────────
+.reset-bar {
+  margin-top: 0.5rem;
+}
+
+.btn-reset-small {
+  background: transparent;
+  border: none;
+  color: $text-muted;
+  font-family: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  transition: color 0.15s;
+
+  &:hover { color: $strike-color; }
+}
+
+// ── Game Over ─────────────────────────────────────────────────────────────
+.game-over {
+  width: 100%;
+  max-width: 480px;
+  margin: 2.5rem auto 0;
+  padding: 0 1rem;
+}
+
+.game-over-card {
+  background: $surface;
+  border: 2px solid $border;
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.trophy { font-size: 3.5rem; }
+
+.game-over-title {
+  font-size: 1.4rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $text;
+}
+
+.final-score {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.final-label {
+  font-size: 0.7rem;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  align-self: center;
+}
+
+.final-value {
+  font-size: 4rem;
+  font-weight: 700;
+  color: $accent;
+  line-height: 1;
+}
+
+.final-max {
+  font-size: 1.2rem;
+  color: $text-muted;
+}
+
+.performance {
+  font-size: 0.95rem;
+  color: $text-muted;
+  letter-spacing: 0.06em;
+
+  &.perfect span {
+    color: $accent;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+  }
+}
+
+.btn-reset {
+  margin-top: 0.5rem;
+  padding: 0.75rem 2rem;
+  background: $accent;
+  color: $bg;
+  border: none;
+  border-radius: $radius;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    background: lighten($accent, 8%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba($accent, 0.35);
+  }
+}
