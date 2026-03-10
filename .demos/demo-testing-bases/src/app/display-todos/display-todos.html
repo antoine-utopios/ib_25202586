@@ -1,0 +1,5 @@
+<ul id="todos_listing">
+  @for(todo of todos(); track todo.id) {
+  <li [id]="(`todo-${todo.id}`)">{{ todo.title }}</li>
+  }
+</ul>
