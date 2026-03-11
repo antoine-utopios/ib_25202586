@@ -1,1 +1,74 @@
-<p>hangman works!</p>
+<div class="hangman-container">
+
+  <!-- Gallows SVG -->
+  <div class="gallows">
+    <svg viewBox="0 0 200 250" width="200" height="250">
+      <!-- Base, pole, beam, rope always visible -->
+      <line x1="20" y1="240" x2="180" y2="240" stroke="#333" stroke-width="4" />
+      <line x1="60" y1="240" x2="60" y2="20" stroke="#333" stroke-width="4" />
+      <line x1="60" y1="20" x2="140" y2="20" stroke="#333" stroke-width="4" />
+      <line x1="140" y1="20" x2="140" y2="45" stroke="#333" stroke-width="4" />
+
+      <!-- Head (7 - 6 = 1 wrong guess) -->
+      @if (hangmanService.remainingLifes()
+      <= 6) { <circle cx="140" cy="60" r="15" stroke="#e74c3c" stroke-width="3" fill="none" />
+      }
+      <!-- Body (5) -->
+      @if (hangmanService.remainingLifes()
+      <= 5) { <line x1="140" y1="75" x2="140" y2="140" stroke="#e74c3c" stroke-width="3" />
+      }
+      <!-- Left arm (4) -->
+      @if (hangmanService.remainingLifes()
+      <= 4) { <line x1="140" y1="95" x2="110" y2="120" stroke="#e74c3c" stroke-width="3" />
+      }
+      <!-- Right arm (3) -->
+      @if (hangmanService.remainingLifes()
+      <= 3) { <line x1="140" y1="95" x2="170" y2="120" stroke="#e74c3c" stroke-width="3" />
+      }
+      <!-- Left leg (2) -->
+      @if (hangmanService.remainingLifes()
+      <= 2) { <line x1="140" y1="140" x2="110" y2="180" stroke="#e74c3c" stroke-width="3" />
+      }
+      <!-- Right leg (1) -->
+      @if (hangmanService.remainingLifes()
+      <= 1) { <line x1="140" y1="140" x2="170" y2="180" stroke="#e74c3c" stroke-width="3" />
+      }
+    </svg>
+  </div>
+
+  <!-- Lives -->
+  <div class="lives">
+    ❤️ Vies restantes : <strong>{{ hangmanService.remainingLifes() }}</strong>
+  </div>
+
+  <!-- Word mask -->
+  <div class="mask">
+    @for (char of hangmanService.mask().split(' '); track $index) {
+    <span class="letter-slot" [class.revealed]="char !== '_'">{{ char }}</span>
+    }
+  </div>
+
+  <!-- Win / Lose messages -->
+  @if (hangmanService.testWin()) {
+  <div class="message win">🎉 Bravo ! Vous avez trouvé le mot !</div>
+  } @else if (hangmanService.testLose()) {
+  <div class="message lose">💀 Perdu ! Le mot était : <strong>{{ hangmanService.wordToFound() }}</strong></div>
+  }
+
+  <!-- Alphabet keyboard -->
+  @if (!hangmanService.testWin() && !hangmanService.testLose()) {
+  <div class="keyboard">
+    @for (letter of alphabet; track letter) {
+    <button class="key" [class.correct]="isAttempted(letter) && isCorrect(letter)"
+      [class.wrong]="isAttempted(letter) && !isCorrect(letter)" [disabled]="isAttempted(letter)"
+      (click)="pressCharacter(letter)">
+      {{ letter }}
+    </button>
+    }
+  </div>
+  }
+
+  <!-- Replay button -->
+  <button class="replay-btn" (click)="replayGame()">🔄 Rejouer</button>
+
+</div>

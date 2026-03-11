@@ -1,0 +1,125 @@
+.hangman-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+  min-height: 100vh;
+  background: #f0f4f8;
+}
+
+.gallows {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.lives {
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.mask {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .letter-slot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.2rem;
+    height: 2.8rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-bottom: 3px solid #333;
+    color: #2c3e50;
+    transition: color 0.2s;
+
+    &.revealed {
+      color: #27ae60;
+    }
+  }
+}
+
+.keyboard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+  max-width: 480px;
+
+  .key {
+    width: 2.4rem;
+    height: 2.4rem;
+    border: 2px solid #bdc3c7;
+    border-radius: 6px;
+    background: white;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+
+    &:hover:not(:disabled) {
+      background: #3498db;
+      color: white;
+      border-color: #3498db;
+    }
+
+    &.correct {
+      background: #27ae60;
+      color: white;
+      border-color: #27ae60;
+    }
+
+    &.wrong {
+      background: #e74c3c;
+      color: white;
+      border-color: #e74c3c;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+  }
+}
+
+.message {
+  font-size: 1.4rem;
+  font-weight: bold;
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  text-align: center;
+
+  &.win {
+    background: #d4efdf;
+    color: #1e8449;
+    border: 2px solid #27ae60;
+  }
+
+  &.lose {
+    background: #fadbd8;
+    color: #922b21;
+    border: 2px solid #e74c3c;
+  }
+}
+
+.replay-btn {
+  padding: 0.7rem 2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #2980b9;
+  }
+}

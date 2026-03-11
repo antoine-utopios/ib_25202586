@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { HangmanService } from '../core/hangman';
+import { Component, inject, HostListener } from '@angular/core';
+import { HangmanService } from '../core/hangman.service';
 
 @Component({
   selector: 'app-hangman',
@@ -10,11 +10,34 @@ import { HangmanService } from '../core/hangman';
 export class Hangman {
   readonly hangmanService = inject(HangmanService);
 
-  pressCharacter(value: string) {
-    // TODO: Créer une méthode servant à l'utilisateur pour entrer un nouveau caractère alphabéthique et le tester
+  readonly alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.key.length === 1 && event.key.match(/[a-zA-Z]/)) {
+      this.pressCharacter(event.key);
+    }
   }
 
-  replayGame() {
-    // TODO : Créer une méthode servant à l'utilisateur pour lancer une nouvelle partie
+  pressCharacter(value: string): void {
+    if (
+      this.hangmanService.testWin() ||
+      this.hangmanService.testLose()
+    ) {
+      return;
+    }
+    this.hangmanService.testChar(value);
+  }
+
+  replayGame(): void {
+    this.hangmanService.replayGame();
+  }
+
+  isAttempted(letter: string): boolean {
+    return this.hangmanService.attempts().includes(letter);
+  }
+
+  isCorrect(letter: string): boolean {
+    return this.hangmanService.wordToFound().includes(letter);
   }
 }
