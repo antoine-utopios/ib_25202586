@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -13,8 +13,8 @@ import { AlbumService } from '../../../../core/services/album.service';
 })
 export class AlbumAddComponent {
   form: FormGroup;
-  isSaving = false;
-  error: string | null = null;
+  isSaving = signal(false);
+  error = signal<string | null>(null);
 
   genres = ['Rock', 'Pop', 'Jazz', 'Hip-Hop', 'Electronic', 'Classical', 'Metal', 'R&B', 'Country', 'Folk', 'Blues', 'Reggae', 'Autre'];
 
@@ -36,15 +36,15 @@ export class AlbumAddComponent {
 
   onSubmit(): void {
     if (this.form.invalid) return;
-    this.isSaving = true;
-    this.error = null;
+    this.isSaving.set(true);
+    this.error.set(null);
     this.albumService.create(this.form.value).subscribe({
       next: (album) => {
         this.router.navigate(['/album', album.id]);
       },
       error: () => {
-        this.error = 'Erreur lors de la création. Vérifiez que l\'API est démarrée.';
-        this.isSaving = false;
+        this.error.set('Erreur lors de la création. Vérifiez que l\'API est démarrée.');
+        this.isSaving.set(false);
       }
     });
   }

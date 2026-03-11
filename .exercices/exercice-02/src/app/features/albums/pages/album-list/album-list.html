@@ -1,7 +1,7 @@
 <div class="page-enter">
   <div class="page-header">
     <h1>Ma <span>Collection</span></h1>
-    <p>{{ albums.length }} album{{ albums.length !== 1 ? 's' : '' }} dans votre bibliothèque</p>
+    <p>{{ albums().length }} album{{ albums.length !== 1 ? 's' : '' }} dans votre bibliothèque</p>
   </div>
 
   <div class="container albums-section">
@@ -12,33 +12,41 @@
     </div>
 
     <!-- LOADING -->
-    <div *ngIf="isLoading" class="loading-container">
+    @if(isLoading()) {
+    <div class="loading-container">
       <div class="spinner"></div>
       <span>Chargement des albums…</span>
     </div>
+    }
 
     <!-- ERROR -->
-    <div *ngIf="error && !isLoading" class="error-state">
+    @if (error() && !isLoading()) {
+    <div class="error-state">
       <div class="error-state__icon">⚠️</div>
       <h3>Erreur de connexion</h3>
-      <p>{{ error }}</p>
+      <p>{{ error() }}</p>
       <button class="btn btn--secondary" (click)="loadAlbums()">Réessayer</button>
     </div>
+    }
 
     <!-- EMPTY -->
-    <div *ngIf="!isLoading && !error && albums.length === 0" class="empty-state">
+    @if (!isLoading() && !error() && albums().length === 0) {
+    <div class="empty-state">
       <div class="empty-icon">💿</div>
       <h3>Votre collection est vide</h3>
       <p>Commencez par ajouter votre premier album !</p>
       <a routerLink="/album/add" class="btn btn--primary">Ajouter un album</a>
     </div>
+    }
 
     <!-- GRID -->
-    <div *ngIf="!isLoading && !error && albums.length > 0" class="albums-grid">
-      <div class="album-card" *ngFor="let album of albums">
+    @if(!isLoading() && !error() && albums().length > 0) {
+    <div class="albums-grid">
+      @for (album of albums(); track album.id) {
+      <div class="album-card">
         <a [routerLink]="['/album', album.id]" class="album-card__cover-link">
           <div class="album-card__cover">
-            <img [src]="getImageUrl(album.imageURL)" [alt]="album.nom" loading="lazy"
+            <img [src]="getImageUrl(album.imageURL)" [alt]="album.nom"
               (error)="$any($event.target).src='https://media.istockphoto.com/id/481475560/vector/vinyl-record-template.jpg?s=612x612&w=0&k=20&c=fZgBryspxNnRn8qMa1mEquff_T6wENAY1HXMtNEMyh4='">
             <div class="album-card__overlay">
               <span class="album-card__view-btn">Voir les détails</span>
@@ -59,7 +67,9 @@
 
           <div class="album-card__footer">
             <div class="stars">
-              <span class="star" *ngFor="let filled of getStars(album.note)" [class.filled]="filled">★</span>
+              @for (filled of getStars(album.note); track $index) {
+              <span class="star" [class.filled]="filled">★</span>
+              }
             </div>
             <div class="album-card__actions">
               <a [routerLink]="['/album', album.id, 'edit']" class="btn btn--secondary btn--sm">✏️</a>
@@ -68,6 +78,8 @@
           </div>
         </div>
       </div>
+      }
     </div>
+    }
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AlbumService } from '../../../../core/services/album.service';
@@ -12,9 +12,9 @@ import { Album } from '../../../../core/models/album.model';
   styleUrls: ['./album-detail.scss']
 })
 export class AlbumDetailComponent implements OnInit {
-  album: Album | null = null;
-  isLoading = true;
-  error: string | null = null;
+  album = signal<Album | null>(null);
+  isLoading = signal(true);
+  error = signal<string | null>(null);
 
   constructor(
     private route: ActivatedRoute,
@@ -26,12 +26,12 @@ export class AlbumDetailComponent implements OnInit {
     if (id) {
       this.albumService.getById(id).subscribe({
         next: (album) => {
-          this.album = album;
-          this.isLoading = false;
+          this.album.set(album);
+          this.isLoading.set(false);
         },
         error: () => {
-          this.error = 'Album introuvable.';
-          this.isLoading = false;
+          this.error.set('Album introuvable.');
+          this.isLoading.set(false);
         }
       });
     }

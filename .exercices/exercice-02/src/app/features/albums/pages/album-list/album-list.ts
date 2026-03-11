@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AlbumService } from '../../../../core/services/album.service';
@@ -12,9 +12,9 @@ import { Album } from '../../../../core/models/album.model';
   styleUrls: ['./album-list.scss']
 })
 export class AlbumListComponent implements OnInit {
-  albums: Album[] = [];
-  isLoading = true;
-  error: string | null = null;
+  albums = signal<Album[]>([]);
+  isLoading = signal(true);
+  error = signal<string | null>(null);
 
   constructor(private albumService: AlbumService) { }
 
@@ -23,16 +23,16 @@ export class AlbumListComponent implements OnInit {
   }
 
   loadAlbums(): void {
-    this.isLoading = true;
-    this.error = null;
+    this.isLoading.set(true);
+    this.error.set(null);
     this.albumService.getAll().subscribe({
       next: (albums) => {
-        this.albums = albums;
-        this.isLoading = false;
+        this.albums.set(albums);
+        this.isLoading.set(false);
       },
       error: () => {
-        this.error = 'Impossible de charger les albums. Vérifiez que l\'API est démarrée.';
-        this.isLoading = false;
+        this.error.set('Impossible de charger les albums. Vérifiez que l\'API est démarrée.');
+        this.isLoading.set(false);
       }
     });
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -14,11 +14,10 @@ import { Album } from '../../../../core/models/album.model';
 })
 export class AlbumEditComponent implements OnInit {
   form!: FormGroup;
-  album: Album | null = null;
-  isLoading = true;
-  isSaving = false;
-  error: string | null = null;
-  success = false;
+  album = signal<Album | null>(null);
+  isLoading = signal(true);
+  isSaving = signal(false);
+  error = signal<string | null>(null);
 
   genres = ['Rock', 'Pop', 'Jazz', 'Hip-Hop', 'Electronic', 'Classical', 'Metal', 'R&B', 'Country', 'Folk', 'Blues', 'Reggae', 'Autre'];
 
@@ -35,13 +34,13 @@ export class AlbumEditComponent implements OnInit {
     if (id) {
       this.albumService.getById(id).subscribe({
         next: (album) => {
-          this.album = album;
+          this.album.set(album);
           this.form.patchValue(album);
-          this.isLoading = false;
+          this.isLoading.set(false);
         },
         error: () => {
-          this.error = 'Album introuvable.';
-          this.isLoading = false;
+          this.error.set('Album introuvable.');
+          this.isLoading.set(false);
         }
       });
     }
@@ -60,16 +59,16 @@ export class AlbumEditComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.form.invalid || !this.album) return;
-    this.isSaving = true;
-    this.error = null;
-    this.albumService.update(this.album.id, this.form.value).subscribe({
+    if (this.form.invalid || !this.album()) return;
+    this.isSaving.set(true);
+    this.error.set(null);
+    this.albumService.update(this.album()!.id, this.form.value).subscribe({
       next: () => {
-        this.router.navigate(['/album', this.album!.id]);
+        this.router.navigate(['/album', this.album()!.id]);
       },
       error: () => {
-        this.error = 'Erreur lors de la mise à jour.';
-        this.isSaving = false;
+        this.error.set('Erreur lors de la mise à jour.');
+        this.isSaving.set(false);
       }
     });
   }

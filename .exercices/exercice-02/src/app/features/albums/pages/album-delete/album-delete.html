@@ -1,59 +1,70 @@
 <div class="page-enter container delete-page">
   <!-- LOADING -->
-  <div *ngIf="isLoading" class="loading-container">
+  @if (isLoading()) {
+  <div class="loading-container">
     <div class="spinner"></div>
     <span>Chargement…</span>
   </div>
+  }
 
-  <!-- ALBUM CONFIRM -->
-  <ng-container *ngIf="album && !isLoading">
-    <div class="page-header">
-      <h1>Supprimer <span>l'album</span></h1>
-      <p>Cette action est irréversible. Veuillez confirmer votre choix.</p>
-    </div>
-
-    <div class="delete-card">
-      <div class="delete-card__preview">
-        <img [src]="getImageUrl(album.imageURL)" [alt]="album.nom"
-          (error)="$any($event.target).src='https://media.istockphoto.com/id/481475560/vector/vinyl-record-template.jpg?s=612x612&w=0&k=20&c=fZgBryspxNnRn8qMa1mEquff_T6wENAY1HXMtNEMyh4='">
-        <div class="delete-card__preview-info">
-          <span class="badge badge--accent">{{ album.genre }}</span>
-          <h3>{{ album.nom }}</h3>
-          <p class="artist">{{ album.interprete }}</p>
-          <p class="date">{{ album.dateSortie | slice:0:4 }} · {{ album.nombrePistes }} pistes</p>
-          <div class="stars">
-            <span class="star" *ngFor="let filled of getStars(album.note)" [class.filled]="filled">★</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="delete-card__warning">
-        <span class="delete-card__warning-icon">⚠️</span>
-        <div>
-          <strong>Êtes-vous certain de vouloir supprimer cet album ?</strong>
-          <p>L'album <em>"{{ album.nom }}"</em> de <em>{{ album.interprete }}</em> sera définitivement supprimé de votre
-            collection.</p>
-        </div>
-      </div>
-
-      <div *ngIf="error" class="error-banner">{{ error }}</div>
-
-      <div class="delete-card__actions">
-        <button class="btn btn--danger btn--lg" (click)="confirmDelete()" [disabled]="isDeleting">
-          <span *ngIf="!isDeleting">🗑️ Confirmer la suppression</span>
-          <span *ngIf="isDeleting">Suppression en cours…</span>
-        </button>
-        <a [routerLink]="['/album', album.id]" class="btn btn--ghost btn--lg">
-          Annuler
-        </a>
-      </div>
-    </div>
-  </ng-container>
-
-  <!-- ERROR -->
-  <div *ngIf="error && !isLoading && !album" class="empty-state">
+  <!-- ERROR (album introuvable) -->
+  @if (error() && !isLoading() && !album()) {
+  <div class="empty-state">
     <div class="empty-icon">❌</div>
-    <h3>{{ error }}</h3>
+    <h3>{{ error() }}</h3>
     <a routerLink="/album" class="btn btn--secondary">Retour</a>
   </div>
+  }
+
+  <!-- ALBUM CONFIRM -->
+  @if (album() && !isLoading()) {
+  <div class="page-header">
+    <h1>Supprimer <span>l'album</span></h1>
+    <p>Cette action est irréversible. Veuillez confirmer votre choix.</p>
+  </div>
+
+  <div class="delete-card">
+    <div class="delete-card__preview">
+      <img [src]="getImageUrl(album()!.imageURL)" [alt]="album()!.nom"
+        (error)="$any($event.target).src='https://media.istockphoto.com/id/481475560/vector/vinyl-record-template.jpg?s=612x612&w=0&k=20&c=fZgBryspxNnRn8qMa1mEquff_T6wENAY1HXMtNEMyh4='">
+      <div class="delete-card__preview-info">
+        <span class="badge badge--accent">{{ album()!.genre }}</span>
+        <h3>{{ album()!.nom }}</h3>
+        <p class="artist">{{ album()!.interprete }}</p>
+        <p class="date">{{ album()!.dateSortie | slice:0:4 }} · {{ album()!.nombrePistes }} pistes</p>
+        <div class="stars">
+          @for (filled of getStars(album()!.note); track $index) {
+          <span class="star" [class.filled]="filled">★</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="delete-card__warning">
+      <span class="delete-card__warning-icon">⚠️</span>
+      <div>
+        <strong>Êtes-vous certain de vouloir supprimer cet album ?</strong>
+        <p>L'album <em>"{{ album()!.nom }}"</em> de <em>{{ album()!.interprete }}</em> sera définitivement supprimé de
+          votre collection.</p>
+      </div>
+    </div>
+
+    @if (error()) {
+    <div class="error-banner">{{ error() }}</div>
+    }
+
+    <div class="delete-card__actions">
+      <button class="btn btn--danger btn--lg" (click)="confirmDelete()" [disabled]="isDeleting()">
+        @if (!isDeleting()) {
+        <span>🗑️ Confirmer la suppression</span>
+        } @else {
+        <span>Suppression en cours…</span>
+        }
+      </button>
+      <a [routerLink]="['/album', album()!.id]" class="btn btn--ghost btn--lg">
+        Annuler
+      </a>
+    </div>
+  </div>
+  }
 </div>

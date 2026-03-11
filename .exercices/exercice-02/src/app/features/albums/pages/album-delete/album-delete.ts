@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AlbumService } from '../../../../core/services/album.service';
@@ -12,10 +12,10 @@ import { Album } from '../../../../core/models/album.model';
   styleUrls: ['./album-delete.scss']
 })
 export class AlbumDeleteComponent implements OnInit {
-  album: Album | null = null;
-  isLoading = true;
-  isDeleting = false;
-  error: string | null = null;
+  album = signal<Album | null>(null);
+  isLoading = signal(true);
+  isDeleting = signal(false);
+  error = signal<string | null>(null);
 
   constructor(
     private route: ActivatedRoute,
@@ -28,27 +28,27 @@ export class AlbumDeleteComponent implements OnInit {
     if (id) {
       this.albumService.getById(id).subscribe({
         next: (album) => {
-          this.album = album;
-          this.isLoading = false;
+          this.album.set(album);
+          this.isLoading.set(false);
         },
         error: () => {
-          this.error = 'Album introuvable.';
-          this.isLoading = false;
+          this.error.set('Album introuvable.');
+          this.isLoading.set(false);
         }
       });
     }
   }
 
   confirmDelete(): void {
-    if (!this.album) return;
-    this.isDeleting = true;
-    this.albumService.delete(this.album.id).subscribe({
+    if (!this.album()) return;
+    this.isDeleting.set(true);
+    this.albumService.delete(this.album()!.id).subscribe({
       next: () => {
         this.router.navigate(['/album']);
       },
       error: () => {
-        this.error = 'Erreur lors de la suppression.';
-        this.isDeleting = false;
+        this.error.set('Erreur lors de la suppression.');
+        this.isDeleting.set(false);
       }
     });
   }
