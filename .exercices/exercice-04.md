@@ -1,8 +1,8 @@
-# Réalisation d'une application Angular testée avec Playwright
+# Réalisation d'une application Angular testée avec Playwright / Vitest
 
 ## Objectifs
 
-Pratiquer la réalisation de tests E2E avec Playwright dans le cadre d'un projet Angular
+Pratiquer la réalisation de tests E2E avec Playwright / Vitest dans le cadre d'un projet Angular
 
 ## Sujet
 
@@ -19,6 +19,8 @@ Implémente les fonctionnalités suivantes dans `app.component.ts` / `app.compon
 - **Ajouter** une tâche via un champ texte et un bouton
 - **Supprimer** une tâche via un bouton associé à chaque tâche
 - **Marquer** une tâche comme terminée (via une case à cocher)
+
+Créer un ensemble de tests avec Vitest pour vérifier les fonctionnalités des composant et des services au format `**.spec.ts`.
 
 Installer et configurer Playwright:
 

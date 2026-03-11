@@ -75,6 +75,7 @@
             "coverage": false,
             "coverageReporters": [
               "text",
+              "json",
               "html",
               "lcov"
             ],

@@ -10,7 +10,7 @@
     "test:coverage": "ng test --configuration=coverage",
     "test:watch": "ng test --watch",
     "test:e2e": "playwright test",
-    "sonar": "dotenv -- ng test --configuration development && dotenv -- sonar-scanner -Dsonar.token=$SONAR_TOKEN"
+    "sonar": "dotenv -- ng test --configuration=coverage && dotenv -- sonar-scanner -Dsonar.token=$SONAR_TOKEN"
   },
   "private": true,
   "packageManager": "npm@11.11.0",

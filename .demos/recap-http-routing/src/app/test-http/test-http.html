@@ -1,1 +1,23 @@
 <button (click)="getAllTodos()">Get Todos</button>
+
+<hr>
+
+@if (!error() && isLoading()) {
+<p>Chargement...</p>
+}
+
+@if (error() && !isLoading()) {
+<p>Problème lors de la récupération des données: {{ error() }}</p>
+}
+
+@if (!error() && !isLoading() && todos().length === 0) {
+<p>Pas de todos trouvées</p>
+}
+
+@if (!error() && !isLoading() && todos().length >= 0) {
+<ul data-test-id="listing-todos">
+  @for (todo of todos(); track todo.id) {
+  <li [attr.data-testid]="(`todo-${todo.id}`)">{{ todo.title }}</li>
+  }
+</ul>
+}

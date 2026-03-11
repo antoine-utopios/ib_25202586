@@ -1,5 +1,18 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
+# SonarQube
+.scannerwork/
+sonar-project.properties
+
+# VS Code
+.vscode/
+
+# Angular cache
+.angular/
+
+# Dotenv
+.env
+
 # Compiled output
 /dist
 /tmp
@@ -42,3 +55,11 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
