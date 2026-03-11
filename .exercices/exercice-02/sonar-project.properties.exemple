@@ -1,0 +1,9 @@
+sonar.projectKey=<PROJECT_KEY>
+sonar.organization=<ORGANIZATION>
+sonar.host.url=<SONAR_HOST_URL>
+
+sonar.sources=src
+sonar.exclusions=**/node_modules/**,**/*.spec.ts
+sonar.tests=src
+sonar.test.inclusions=**/*.spec.ts
+sonar.typescript.lcov.reportPaths=coverage/exercice-02/lcov.info

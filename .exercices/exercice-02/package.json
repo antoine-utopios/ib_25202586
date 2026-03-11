@@ -6,7 +6,11 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "test:coverage": "ng test --configuration=coverage",
+    "test:watch": "ng test --watch",
+    "test:e2e": "playwright test",
+    "sonar": "dotenv -- ng test --configuration development && dotenv -- sonar-scanner -Dsonar.token=$SONAR_TOKEN"
   },
   "private": true,
   "packageManager": "npm@11.11.0",
@@ -24,9 +28,13 @@
     "@angular/build": "^21.2.1",
     "@angular/cli": "^21.2.1",
     "@angular/compiler-cli": "^21.2.0",
+    "@playwright/test": "^1.58.2",
+    "@vitest/coverage-v8": "^4.0.18",
+    "dotenv-cli": "^11.0.0",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
     "sass": "^1.97.3",
+    "sonarqube-scanner": "^4.3.5",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }
